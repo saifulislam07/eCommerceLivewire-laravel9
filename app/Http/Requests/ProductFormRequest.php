@@ -80,14 +80,15 @@ class ProductFormRequest extends FormRequest
             'meta_keyword' => [
                 'required',
                 'string',
-
             ],
             'meta_description' => [
                 'required',
                 'string',
-
             ],
-
+            'image' => [
+                'nullable',
+                // 'image|mimes:jpeg,png,jpg'
+            ]
         ];
     }
 }

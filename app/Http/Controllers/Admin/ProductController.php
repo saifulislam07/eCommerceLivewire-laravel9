@@ -6,14 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
 
 class ProductController extends Controller
 {
     public function index()
     {
-        return view('admin.products.index');
+        $products = Product::all();
+        return view('admin.products.index', compact('products'));
     }
     public function create()
     {
@@ -45,6 +48,23 @@ class ProductController extends Controller
         ]);
 
 
-        return $product->id;
+        // return $product->id;
+        if ($request->hasFile('image')) {
+            $path = 'uploads/products/';
+
+            $i = 1;
+            foreach ($request->file('image') as $imageFile) {
+                $ext = $imageFile->getClientOriginalExtension();
+                $filename = time() . $i++ . '.' . $ext;
+                $imageFile->move($path, $filename);
+                $finalImagePathName =  $path . $filename;
+                $product->productImages()->create([
+                    'product_id' => $product->id,
+                    'image' => $finalImagePathName,
+                ]);
+            }
+        }
+
+        return redirect('/admin/products')->with('message', 'Product created successfully');
     }
 }

@@ -15,7 +15,7 @@
                 <div class="card-body">
 
                     @if ($errors->any())
-                        <div class="alert alert-warning">
+                        <div class="alert alert-danger">
                             @foreach ($errors->all() as $error)
                                 <div>{{ $error }}</div>
                             @endforeach
@@ -139,7 +139,7 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="">Upload Products Images</label>
-                                            <input type="file" class="form-control" name="image" multiple>
+                                            <input type="file" class="form-control" name="image[]" multiple>
                                         </div>
                                     </div>
 

@@ -62,17 +62,13 @@ class CategoryController extends Controller
         $category->description  = $validatedData['description'];
 
         if ($request->hasFile('image')) {
-
             $path = 'uploads/category/' . $category->image;
-
             if (File::exists($path)) {
                 File::delete($path);
             }
-
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
-
             $file->move('uploads/category/', $filename);
             $category->image  = $filename;
         }
