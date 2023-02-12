@@ -28,13 +28,14 @@ class Product extends Model
     ];
 
 
-    public function productImages()
-    {
-        return $this->hasMany(ProductImage::class, 'product_id', 'id');
-    }
 
     public function cateogry()
     {
         return $this->belongsTo(category::class, 'category_id', 'id');
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
 }
