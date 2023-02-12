@@ -19,6 +19,8 @@
                          </li>
                          <li class="nav-item"> <a class="nav-link" href="{{ url('admin/brands') }}">Brand</a>
                          </li>
+                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/colors') }}">Color</a>
+                         </li>
                      </ul>
                  </div>
              </li>
