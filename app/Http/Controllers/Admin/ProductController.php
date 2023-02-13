@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductColor;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -22,9 +24,10 @@ class ProductController extends Controller
     }
     public function create()
     {
+        $colors = Color::where('status', '0')->get();
         $categories = Category::get();
         $brands = Brand::get();
-        return view('admin.products.create', compact('categories', 'brands'));
+        return view('admin.products.create', compact('categories', 'brands', 'colors'));
     }
 
     public function store(ProductFormRequest $request)
@@ -37,6 +40,7 @@ class ProductController extends Controller
             'name' => $validatedData['name'],
             'slug' => Str::slug($validatedData['slug']),
             'brand' => $validatedData['brand'],
+
             'small_description' => $validatedData['small_description'],
             'description' => $validatedData['description'],
             'original_price' => $validatedData['original_price'],
@@ -67,6 +71,17 @@ class ProductController extends Controller
             }
         }
 
+
+        if ($request->colors) {
+            foreach ($request->colors as $key => $color) {
+                $product->productColors()->create([
+                    'product_id' => $product->id,
+                    'color_id' => $color,
+                    'quantity' => $request->colorquantity[$key] ?? 0,
+                ]);
+            }
+        }
+
         return redirect('/admin/products')->with('message', 'Product created successfully');
     }
 
@@ -75,7 +90,11 @@ class ProductController extends Controller
         $categories = Category::get();
         $brands = Brand::get();
         $product = Product::findOrFail($product_id);
-        return view('admin.products.edit', compact('categories', 'brands', 'product'));
+        $product_colors =   $product->productColors->pluck('color_id')->toArray();
+
+        $colors = Color::whereNotIn('id', $product_colors)->get();
+
+        return view('admin.products.edit', compact('categories', 'brands', 'product', 'colors'));
     }
 
 
@@ -89,6 +108,27 @@ class ProductController extends Controller
         return redirect()->back()->with('message', 'Product images deleted successfully');
     }
 
+    public function updateProductColorQty(Request $request, $proColorId)
+    {
+
+
+        $productColorData = Product::findOrFail($request->product_id)
+            ->productColors()->where('id', $proColorId)->first();
+
+        $productColorData->update([
+            'quantity' => $request->qty
+        ]);
+        return response()->json(['message' => 'Product Color quanity updated']);
+    }
+
+
+    public function deleteProductColor($proColorId)
+    {
+
+        $productColor = ProductColor::findOrFail($proColorId);
+        $productColor->delete();
+        return response()->json(['message' => 'Product Color quanity Deleted']);
+    }
 
     public function destroy(int $product_id)
     {
@@ -144,6 +184,18 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+
+            if ($request->colors) {
+                foreach ($request->colors as $key => $color) {
+                    $product->productColors()->create([
+                        'product_id' => $product->id,
+                        'color_id' => $color,
+                        'quantity' => $request->colorquantity[$key] ?? 0,
+                    ]);
+                }
+            }
+
 
             return redirect('/admin/products')->with('message', 'Product updated successfully');
         } else {

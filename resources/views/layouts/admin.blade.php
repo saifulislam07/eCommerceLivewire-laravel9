@@ -41,6 +41,7 @@
     <script src="{{ asset('admin/js/dataTables.bootstrap4.js') }}"></script>
     <script src="{{ asset('admin/js/jquery.cookie.js') }}" type="text/javascript"></script>
 
+    @yield('scripts')
     @livewireScripts
 </body>
 

@@ -45,6 +45,11 @@
                                     data-bs-target="#images-tab-pane" type="button" role="tab"
                                     aria-controls="images-tab-pane" aria-selected="false">Images</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="color-tab" data-bs-toggle="tab"
+                                    data-bs-target="#color-tab-pane" type="button" role="tab"
+                                    aria-controls="color-tab-pane" aria-selected="false">Product Color</button>
+                            </li>
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
@@ -53,6 +58,7 @@
                                 <div class="mb-3">
                                     <label for="">Category</label>
                                     <select name="category_id" id="" class="form-control">
+                                        <option value="">Select Category</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
@@ -69,6 +75,7 @@
                                 <div class="mb-3">
                                     <label for="">Brand</label>
                                     <select name="brand" id="" class="form-control">
+                                        <option value="">Select Brand</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand->name }}">{{ $brand->name }}</option>
                                         @endforeach
@@ -145,9 +152,36 @@
 
                                 </div>
                             </div>
+                            <div class="tab-pane fade border p-3" id="color-tab-pane" role="tabpanel"
+                                aria-labelledby="color-tab" tabindex="0">
 
+                                <div class="mb-3">
+
+
+                                    <label for="">Select Color</label>
+                                    <div class="row mt-1">
+                                        @forelse ($colors as $color)
+                                            <div class="col-md-2">
+                                                <div class="p-2 border mb-3">
+                                                    Color : <input type="checkbox" name="colors[{{ $color->id }}]"
+                                                        value="{{ $color->id }}" /> {{ $color->name }}
+                                                    <hr>
+                                                    Quantity : <input type="number" class=""
+                                                        name="colorquantity[{{ $color->id }}]"
+                                                        style="width:70px; border : 1px solid black" />
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="col-md-12">
+                                                <h5 class="alert alert-warning">No Active Color found</h5>
+                                            </div>
+                                        @endforelse
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                        <div>
+                        <div class="mt-2">
                             <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                         </div>
                     </form>
