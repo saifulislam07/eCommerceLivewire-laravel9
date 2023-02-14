@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
+
+//frontend
+Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
@@ -43,8 +46,6 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     // Brankd routes
     Route::get('/brands', App\Http\Livewire\Admin\Brand\Index::class);
 
-
-
     // product routes
     Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function () {
         Route::get('/products', 'index');
@@ -57,6 +58,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
         Route::post('product-color/{prod_color_id}', 'updateProductColorQty');
         Route::get('product-color/{prod_color_id}/delete', 'deleteProductColor');
     });
+
     // color routes
     Route::controller(App\Http\Controllers\Admin\ColorController::class)->group(function () {
         Route::get('/colors', 'index');
@@ -65,5 +67,16 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
         Route::get('/colors/{color}/edit', 'edit');
         Route::put('/colors/{color}', 'update');
         Route::get('/colors/{color_id}/delete', 'destroy');
+    });
+
+
+    //slider
+    Route::controller(App\Http\Controllers\Admin\SliderController::class)->group(function () {
+        Route::get('/sliders', 'index');
+        Route::get('/sliders/create', 'create');
+        Route::post('/sliders', 'store');
+        Route::get('/sliders/{slider}/edit', 'edit');
+        Route::put('/sliders/{slider}', 'update');
+        Route::get('/sliders/{slider_id}/delete', 'destroy');
     });
 });
